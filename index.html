@@ -1,26 +1,91 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>way2alive pre-release</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      overflow: hidden;
       height: 100%;
+      overflow: hidden;
       background-color: black;
     }
+
     video {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100vw;
       height: 100vh;
       object-fit: cover;
-      display: block;
+      z-index: -1;
+    }
+
+    #overlayImage {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-image: url('picture.jpg'); 
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: 1;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-  <video autoplay muted loop>
-    <source src="way2alive.mp4" type="video/mp4">
-    
+  <!-- Background video -->
+  <video autoplay muted playsinline loop preload="auto">
+    <source src="way2alive.mp4" type="video/mp4" />
   </video>
+
+  <!-- Overlay image that fades in/out on scroll -->
+  <div id="overlayImage"></div>
+
+  <script>
+    const overlayImage = document.getElementById('overlayImage');
+    let opacity = 0;
+    let timeoutId;
+
+    // Adjusts opacity safely between 0 and 1
+    function updateOpacity(value) {
+      opacity = Math.max(0, Math.min(1, opacity + value));
+      overlayImage.style.opacity = opacity;
+    }
+
+    // Resets timer that auto-fades the overlay after 11 seconds
+    function resetFadeTimer() {
+      clearTimeout(timeoutId);
+
+      timeoutId = setTimeout(() => {
+        const fadeInterval = setInterval(() => {
+          if (opacity > 0) {
+            updateOpacity(-0.01);
+          } else {
+            clearInterval(fadeInterval);
+          }
+        }, 30);
+      }, 11000);
+    }
+
+    // Trigger opacity change on scroll
+    window.addEventListener('wheel', (event) => {
+      const delta = event.deltaY;
+
+      if (delta > 0) {
+        updateOpacity(0.05);
+      } else {
+        updateOpacity(-0.05);
+      }
+
+      resetFadeTimer();
+    });
+  </script>
 </body>
 </html>
