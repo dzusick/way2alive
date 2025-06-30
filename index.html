@@ -33,7 +33,6 @@
       background-size: cover;
       background-position: center;
       opacity: 0;
-      transition: opacity 0.5s ease;
       z-index: 1;
       pointer-events: none;
     }
@@ -45,7 +44,7 @@
     <source src="way2alive.mp4" type="video/mp4" />
   </video>
 
-  <!-- Overlay image that fades in/out on scroll -->
+  <!-- Image overlay that fades in/out -->
   <div id="overlayImage"></div>
 
   <script>
@@ -53,37 +52,31 @@
     let opacity = 0;
     let timeoutId;
 
-    // Adjusts opacity safely between 0 and 1
     function updateOpacity(value) {
       opacity = Math.max(0, Math.min(1, opacity + value));
       overlayImage.style.opacity = opacity;
     }
 
-    // Resets timer that auto-fades the overlay after 11 seconds
     function resetFadeTimer() {
       clearTimeout(timeoutId);
-
       timeoutId = setTimeout(() => {
-        const fadeInterval = setInterval(() => {
+        const fadeOut = setInterval(() => {
           if (opacity > 0) {
             updateOpacity(-0.01);
           } else {
-            clearInterval(fadeInterval);
+            clearInterval(fadeOut);
           }
         }, 30);
       }, 11000);
     }
 
-    // Trigger opacity change on scroll
     window.addEventListener('wheel', (event) => {
       const delta = event.deltaY;
-
       if (delta > 0) {
         updateOpacity(0.05);
       } else {
         updateOpacity(-0.05);
       }
-
       resetFadeTimer();
     });
   </script>
