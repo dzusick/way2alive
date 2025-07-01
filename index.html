@@ -29,10 +29,11 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background-image: url('picture.jpeg'); 
+      background-image: url('picture.jpeg');
       background-size: cover;
       background-position: center;
-      opacity: 0;
+      opacity: 0.8; /* ← стартова прозорість */
+      transition: opacity 0.2s ease; /* ← плавність */
       z-index: 1;
       pointer-events: none;
     }
@@ -44,17 +45,17 @@
     <source src="way2alive.mp4" type="video/mp4" />
   </video>
 
-  <!-- Image overlay that fades in/out -->
+  <!-- Image overlay -->
   <div id="overlayImage"></div>
 
   <script>
     const overlayImage = document.getElementById('overlayImage');
-    let opacity = 0;
+    let opacity = 0.8; // ← стартова прозорість
     let timeoutId;
 
     function updateOpacity(value) {
       opacity = Math.max(0, Math.min(1, opacity + value));
-      overlayImage.style.opacity = opacity;
+      overlayImage.style.opacity = opacity.toFixed(2);
     }
 
     function resetFadeTimer() {
@@ -73,9 +74,9 @@
     window.addEventListener('wheel', (event) => {
       const delta = event.deltaY;
       if (delta > 0) {
-        updateOpacity(0.05);
+        updateOpacity(-0.05); // прокрутка вниз — зменшує прозорість
       } else {
-        updateOpacity(-0.05);
+        updateOpacity(0.05);  // прокрутка вгору — збільшує прозорість
       }
       resetFadeTimer();
     });
